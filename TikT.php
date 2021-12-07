@@ -1,4 +1,4 @@
-#KI
+<!DOCTYPE HTML>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -30,6 +30,50 @@
         </form>
       </div>
     </div>
-      </div>
+    <?php
+         if(isset($_POST["submit"])){
+           ?>
+             <div class="card mt-4">
+             <div class="card-header">
+              Hasil
+              </div>
+            <div class="card-body justify-content-center text-center">
+           <?php
+           $url = $_POST["url"];
+           if(empty($url)){
+             ?>
+               <div class="alert alert-danger mb-3">
+                isi link video tiktoknya
+               </div>
+             <?php
+           }else {
+             $cek = file_get_contents("https://tt-dl.herokuapp.com/?url=".$url);
+             $dec = json_decode($cek, true);
+             $cari = strpos($cek, "status");
+             if($cari){
+               ?>
+                 <div class="alert alert-danger mb-3">
+                  <?= $dec["message"]; ?>
+                 </div>
+                </div>
+               <?php
+             } else {
+               ?>
+                  <video width="300" height="200" controls>
+                    <source src="<?= $dec["download"]; ?>" type="video/mp4">
+                   </video>
+                </div>
+                <div class="mt-2 text-center mb-4">
+                  <a href="<?= $dec["src-dl"]; ?>" class="btn btn-primary text-uppercase" target="_blank">Download</a>
+                </div>
+               <?php
+             }
+           }
+           ?>
+            </div>
+           <?php
+         }
+        ?>
+  </div>
 </body>
 </html>
